@@ -38,7 +38,17 @@ channel. If the server send it to the client, it indicates that a
 message has been posted to a particular channel. The timestamp field is
 ignored or not present in the client's message.
 
-COUL 0.1 MSG <CHANNEL> <TIMESTAMP?>
+COUL 0.1 MSG <CHANNEL>
+<message, possibly multiple lines>
+
+### SMSG
+
+Indicates that a particular message was sent
+to a given channel by a nick at the timestamp.
+used by servers to indicate an incoming message,
+and in links.
+
+COUL 0.1 SMSG <NICK> <CHANNEL> <TIMESTAMP>
 <message, possibly multiple lines>
 
 ### STATUS
