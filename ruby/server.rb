@@ -3,14 +3,15 @@ require 'bundler/setup'
 Bundler.setup(:default)
 $LOAD_PATH.unshift(File.dirname(__FILE__) + "/lib")
 
-#require 'version'
-#require 'parser'
+require 'version'
+require 'parser'
+require 'client'
+require 'engine'
 
-#require 'pp'
+require 'pp'
 require 'socket'
 
 
-=begin
 p = Coul::Parser.new
 
 begin
@@ -18,9 +19,9 @@ begin
 rescue Parslet::ParseFailed => failure
   puts failure.cause.ascii_tree
 end
-=end
 
 clients = []
+engine = Coul::Engine.new(clients)
 
 def format_peeraddr(x)
   y = x.peeraddr(:hostname)
@@ -30,13 +31,22 @@ end
 
 server = TCPServer.new 2000 # Server bind to port 2000
 loop do
-  client = server.accept    # Wait for a client to connect
+  sock = server.accept    # Wait for a client to connect
   Thread.new do
-    clients << client
-    client.puts "Hello !"
-    client.puts "Time is #{Time.now}"
-    puts format_peeraddr(client) + " connected."
+    begin
+    c = Coul::Client.new(sock, clients, engine)
+    clients << c
+    sock.puts "Hello !"
+    sock.puts "Time is #{Time.now}"
+    puts c.ident + " connected."
 
+      c.listen
+    rescue => e
+      puts "ERROR: " + e.message
+      puts e.backtrace
+    end
+
+=begin
     while line = client.gets
       begin
         puts format_peeraddr(client) + "- " + line
@@ -51,6 +61,7 @@ loop do
         puts "ERROR: " + e.message
       end
     end
+=end
 
     client.close
   end
