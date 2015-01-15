@@ -14,8 +14,24 @@ require 'socket'
 
 p = Coul::Parser.new
 
+msg = <<END
+COUL 0.1 MSG bots
+This is a test.
+This is another test.
+
+END
+
+smsg = <<END
+COUL 0.1 SMSG indigo@192.168.1.2 bots 5
+This is a test.
+
+END
+
 begin
-  pp p.parse("COUL 0.1 PING\n")
+  pp p.parse(msg)
+  pp p.parse(smsg)
+  pp p.hostname.parse("mail.test.com")
+  pp p.ip.parse("99.255.255.255")
 rescue Parslet::ParseFailed => failure
   puts failure.cause.ascii_tree
 end

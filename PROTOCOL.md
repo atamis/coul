@@ -2,6 +2,11 @@
 
 Version 0.1
 
+Servers are identified either by their addressable IPs or a DNS
+resolvable URL.
+Users are identified by their nickname and the
+server they are connected to separated by an @ sign.
+
 ## Text
 
 All messages start with "COUL 0.1", where 0.1 is the current
@@ -48,7 +53,7 @@ to a given channel by a nick at the timestamp.
 used by servers to indicate an incoming message,
 and in links.
 
-COUL 0.1 SMSG <NICK> <CHANNEL> <TIMESTAMP>
+COUL 0.1 SMSG <NICK>@<SERVER> <CHANNEL> <TIMESTAMP>
 <message, possibly multiple lines>
 
 ### STATUS
