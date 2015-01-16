@@ -7,9 +7,17 @@ require 'version'
 require 'parser'
 require 'client'
 require 'engine'
+require 'appdata'
 
 require 'pp'
 require 'socket'
+
+AppData.config do
+  parameter :port
+  parameter :hostname
+end
+
+require 'config.rb'
 
 
 p = Coul::Parser.new
@@ -36,10 +44,8 @@ rescue Parslet::ParseFailed => failure
   puts failure.cause.ascii_tree
 end
 
-hostname = "localhost"
-
 clients = []
-engine = Coul::Engine.new(hostname, clients)
+engine = Coul::Engine.new(AppData.hostname, clients)
 
 def format_peeraddr(x)
   y = x.peeraddr(:hostname)
@@ -47,7 +53,7 @@ def format_peeraddr(x)
 end
 
 
-server = TCPServer.new 2000 # Server bind to port 2000
+server = TCPServer.new AppData.port # Server bind to port 2000
 loop do
   sock = server.accept    # Wait for a client to connect
   Thread.new do
