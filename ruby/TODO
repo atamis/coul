@@ -1,0 +1,13 @@
+Ruby Server TODO
+
+- More graceful shutdown
+
+- Server links
+
+- Dead client pruning
+
+- error reporting
+
+- server status
+
+- changing nicknames
