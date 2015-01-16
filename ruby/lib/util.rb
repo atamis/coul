@@ -1,5 +1,5 @@
 # Thanks, http://speakmy.name/2011/05/29/simple-configuration-for-ruby-apps/
-module Appdata
+module AppData
   # we don't want to instantiate this class - it's a singleton,
   # so just keep it as a self-extended module
   extend self
@@ -28,5 +28,13 @@ module Appdata
     instance_eval &block
   end
 
+end
+
+class NullLogger
+  def debug(*); end
+  def info(*); end
+  def warn(*); end
+  def error(*); end
+  def fatal(*); end
 end
 

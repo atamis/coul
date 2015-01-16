@@ -1,12 +1,14 @@
+require 'factory'
 
 module Coul
   class Client
     attr_accessor :sock, :nick
-    def initialize(socket, clients, engine)
+    def initialize(socket, clients, engine, logger=NullLogger.new)
       @sock = socket
       @clients = clients
       @engine = engine
       @buffer = ""
+      @log = logger
       @nick = rand(9999)
     end
 
@@ -17,7 +19,8 @@ module Coul
 
     def listen
 
-      while line = @sock.gets
+      @log.debug ident + " listening"
+      while !(@sock.closed?) && line = @sock.gets
         begin
           if line != "\n"
             @buffer += line
@@ -28,35 +31,35 @@ module Coul
             @buffer = ""
           end
         rescue Parslet::ParseFailed => failure
-          puts failure.cause.ascii_tree
+          @log.error "Parse Error:" + failure.cause.ascii_tree
         rescue => e
-          puts "ERROR: " + e.message
-          puts e.backtrace
+          @log.error "ERROR: " + e.class + " " + e.message
+          @log.error e.backtrace
           @buffer = ""
         end
       end
 
     ensure
-      @sock.close
+      if !@sock.closed?
+        @log.debug ident + " socket closed."
+        @sock.close
+      end
     end
 
     def process(buffer)
       @engine.client_process(self, buffer)
-      return
-
-      puts ident + "- " + buffer
-      @clients.each do |c|
-        begin
-          c.send ident + "- " + buffer
-        rescue => e
-          c.send "ERROR: " + e.message
-        end
-      end
     end
-
 
     def send(message)
       @sock.puts(message)
+    end
+
+    def close
+      puts "Closing " + ident
+
+      #TODO: do server shutdown better.
+      @sock.puts("Server shutting down.")
+      @sock.close
     end
   end
 end

@@ -3,10 +3,11 @@ require 'factory'
 module Coul
   class Engine
     include Factory
-    def initialize(hostname, clients)
+    def initialize(hostname, clients, logger=NullLogger.new)
       @clients = clients
       @hostname = hostname
       @parser = Coul::Parser.new
+      @log = logger
     end
 
     def client_process(source, message)
@@ -24,6 +25,7 @@ module Coul
     end
 
     def msg(source, channel, message)
+      @log.debug "Message from " + source.ident
       @clients.each do |c|
         if c != source
           c.send(build_smsg(source.nick, @hostname, channel, Time.now.to_f, message))
