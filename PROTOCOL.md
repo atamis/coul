@@ -57,6 +57,19 @@ with the possibility of fractional seconds.
 COUL 0.1 SMSG <NICK>@<SERVER> <CHANNEL> <TIMESTAMP>
 <message, possibly multiple lines>
 
+### ALERT
+
+This alert could be a server-shutdown message, admin messages, etc.
+An alert can be tagged as server or network, indicating that an alert
+should distributed only to the current server, or to the network as a
+whole.
+
+COUL 0.1 ALERT <SERVER or NETWORK> <TIMESTAMP>
+<ALERT MESSAGE>
+
+TODO: decide whether this is needed.
+
+
 ### STATUS
 
 COUL 0.1 STATUS
