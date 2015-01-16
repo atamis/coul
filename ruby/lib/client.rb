@@ -1,12 +1,13 @@
 
 module Coul
   class Client
-    attr_accessor :sock
+    attr_accessor :sock, :nick
     def initialize(socket, clients, engine)
       @sock = socket
       @clients = clients
       @engine = engine
       @buffer = ""
+      @nick = rand(9999)
     end
 
     def ident
@@ -16,21 +17,27 @@ module Coul
 
     def listen
 
-      begin
       while line = @sock.gets
-        if line != "\n"
-          @buffer += line
-        else
-          # Process the buffer
-          process(@buffer)
+        begin
+          if line != "\n"
+            @buffer += line
+          else
+            # Process the buffer
+            @buffer += line
+            process(@buffer)
+            @buffer = ""
+          end
+        rescue Parslet::ParseFailed => failure
+          puts failure.cause.ascii_tree
+        rescue => e
+          puts "ERROR: " + e.message
+          puts e.backtrace
           @buffer = ""
         end
       end
-      rescue => e
-        puts "ERROR: " + e.message
-        puts e.backtrace
-      end
 
+    ensure
+      @sock.close
     end
 
     def process(buffer)
