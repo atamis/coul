@@ -11,7 +11,7 @@ module Coul
     end
 
     def build_smsg(nick, server, channel, timestamp, message)
-      "#{header} #{nick}@#{server} #{channel} #{timestamp}\n#{message}\n"
+      "#{header}SMSG #{nick}@#{server} #{channel} #{timestamp}\n#{message}\n"
     end
 
 

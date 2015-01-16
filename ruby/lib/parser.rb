@@ -5,7 +5,7 @@ require 'parslet'
 
 module Coul
   class Parser < Parslet::Parser
-    rule(:message) { match('\s').maybe >> header.as(:header) >> body >> str("\n")}
+    rule(:message) { match('\s').maybe >> header.as(:header) >> body >> str("\n") >> match('\s').maybe}
 
     rule(:header) { str("COUL " + VERSION + " ")}
 

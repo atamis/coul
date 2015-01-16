@@ -36,8 +36,10 @@ rescue Parslet::ParseFailed => failure
   puts failure.cause.ascii_tree
 end
 
+hostname = "localhost"
+
 clients = []
-engine = Coul::Engine.new(clients)
+engine = Coul::Engine.new(hostname, clients)
 
 def format_peeraddr(x)
   y = x.peeraddr(:hostname)
