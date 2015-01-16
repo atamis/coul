@@ -51,7 +51,8 @@ COUL 0.1 MSG <CHANNEL>
 Indicates that a particular message was sent
 to a given channel by a nick at the timestamp.
 used by servers to indicate an incoming message,
-and in links.
+and in links. Timestamp is in seconds since epoch,
+with the possibility of fractional seconds.
 
 COUL 0.1 SMSG <NICK>@<SERVER> <CHANNEL> <TIMESTAMP>
 <message, possibly multiple lines>
