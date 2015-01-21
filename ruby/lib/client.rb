@@ -33,13 +33,14 @@ module Coul
         rescue Parslet::ParseFailed => failure
           @log.error "Parse Error:" + failure.cause.ascii_tree
         rescue => e
-          @log.error "ERROR: " + e.class + " " + e.message
+          @log.error "ERROR: " + e.class.to_s + " " + e.message
           @log.error e.backtrace
           @buffer = ""
         end
       end
 
     ensure
+      @clients.delete(self)
       if !@sock.closed?
         @log.debug ident + " socket closed."
         @sock.close
@@ -51,7 +52,9 @@ module Coul
     end
 
     def send(message)
-      @sock.puts(message)
+      if !@sock.closed?
+        @sock.puts(message)
+      end
     end
 
     def close

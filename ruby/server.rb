@@ -41,7 +41,7 @@ This is another test.
 END
 
 smsg = <<END
-COUL 0.1 SMSG indigo@192.168.1.2 bots 5
+COUL 0.1 SMSG indigo@192.168.1.2 bots 5.5
 This is a test.
 
 END
@@ -77,8 +77,6 @@ loop do
     begin
       c = Coul::Client.new(sock, clients, engine, log)
       clients << c
-      sock.puts "Hello !"
-      sock.puts "Time is #{Time.now}"
       log.debug c.ident + " connected."
 
       c.listen

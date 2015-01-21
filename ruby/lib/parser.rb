@@ -25,7 +25,7 @@ module Coul
       str(" ") >> match('\w').repeat.as(:nick) >>
         str("@") >> (hostname | ip).as(:server) >>
       str(" ") >> match('\w').repeat.as(:channel) >>
-      str(" ") >> match('\w').repeat.as(:timestamp) >>
+      str(" ") >> (match('\d').repeat >> (str('.') >> match('\d').repeat).maybe).as(:timestamp) >>
       str("\n") >>
       msg_body
     end
