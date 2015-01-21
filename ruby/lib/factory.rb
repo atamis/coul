@@ -2,22 +2,26 @@
 module Coul
   module Factory
 
-    def build_pong
+    def self.build_pong
       header + "PONG\n\n"
     end
 
-    def build_ping
+    def self.build_ping
       header + "PING\n\n"
     end
 
-    def build_smsg(nick, server, channel, timestamp, message)
+    def self.build_smsg(nick, server, channel, timestamp, message)
       "#{header}SMSG #{nick}@#{server} #{channel} #{timestamp}\n#{message}\n"
+    end
+
+    def self.build_msg(channel, message)
+      "#{header}MSG #{channel}\n#{message}\n\n"
     end
 
 
     private
 
-    def header
+    def self.header
       "COUL " + VERSION + " "
     end
 
