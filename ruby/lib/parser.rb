@@ -9,7 +9,7 @@ module Coul
 
     rule(:header) { str("COUL " + VERSION + " ")}
 
-    rule(:body) { ping | pong | msg | smsg}
+    rule(:body) { ping | pong | msg | smsg | alert}
 
     rule(:ping) { str("PING").as(:command)}
     rule(:pong) { str("PONG").as(:command)}
@@ -25,15 +25,24 @@ module Coul
       str(" ") >> match('\w').repeat.as(:nick) >>
         str("@") >> (hostname | ip).as(:server) >>
       str(" ") >> match('\w').repeat.as(:channel) >>
-      str(" ") >> (match('\d').repeat >> (str('.') >> match('\d').repeat).maybe).as(:timestamp) >>
+      str(" ") >> timestamp >>
       str("\n") >>
       msg_body
+    end
+
+    rule(:timestamp) do
+      (match('\d').repeat >> (str('.') >> match('\d').repeat).maybe).as(:timestamp) 
     end
 
     rule(:msg_body) do
       ((str("\n\n").absent? >> match('[\s\S]')).repeat >>
       str("\n")).as(:message) # the last newline in the message
       #match(/([\s\S]*)(?=\n\n)/)
+    end
+
+    rule(:alert) do
+      str("ALERT") >> str(" ") >> (str("SERVER") | str("NETWORK")).as(:source) >>
+      str(' ') >> timestamp >> str("\n") >> msg_body
     end
 
     root :message

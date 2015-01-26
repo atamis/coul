@@ -46,9 +46,16 @@ This is a test.
 
 END
 
+alert = <<END
+COUL 0.1 ALERT SERVER 5504.253
+This is a server alert.
+
+END
+
 begin
   log.debug p.parse(msg)
   log.debug p.parse(smsg)
+  log.debug p.parse(alert)
   log.debug p.hostname.parse("mail.test.com")
   log.debug p.ip.parse("99.255.255.255")
 rescue Parslet::ParseFailed => failure
