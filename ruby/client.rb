@@ -80,13 +80,21 @@ while true
           serv_buffer = ""
           next
         end
-        nick = parsed[:nick]
-        server = parsed[:server]
-        channel = parsed[:channel]
-        timestamp = Time.at(parsed[:timestamp].to_f)
-        message = parsed[:message]
+        case parsed[:command]
+        when "SMSG"
+          nick = parsed[:nick]
+          server = parsed[:server]
+          channel = parsed[:channel]
+          timestamp = Time.at(parsed[:timestamp].to_f)
+          message = parsed[:message]
 
-        puts "#{nick}:#{server}!#{channel} - #{message.inspect}"
+          puts "#{nick}:#{server}!#{channel} - #{message.inspect}"
+        when "ALERT"
+          source = parsed[:source]
+          timestamp = Time.at(parsed[:timestamp].to_f)
+          message = parsed[:message]
+          puts "#{source} ALERT: #{message}"
+        end
 
       end
     end

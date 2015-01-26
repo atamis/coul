@@ -41,7 +41,7 @@ module Coul
     end
 
     rule(:alert) do
-      str("ALERT") >> str(" ") >> (str("SERVER") | str("NETWORK")).as(:source) >>
+      str("ALERT").as(:command) >> str(" ") >> (str("SERVER") | str("NETWORK")).as(:source) >>
       str(' ') >> timestamp >> str("\n") >> msg_body
     end
 

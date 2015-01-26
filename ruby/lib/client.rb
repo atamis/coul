@@ -18,6 +18,7 @@ module Coul
     end
 
     def listen
+      @engine.joined(nick)
 
       @log.debug ident + " listening"
       while !(@sock.closed?) && line = @sock.gets
@@ -41,6 +42,7 @@ module Coul
 
     ensure
       @clients.delete(self)
+      @engine.left(nick)
       if !@sock.closed?
         @log.debug ident + " socket closed."
         @sock.close

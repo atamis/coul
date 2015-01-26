@@ -20,15 +20,29 @@ module Coul
       end
     end
 
+    def joined(nick)
+      puts "sending alerts"
+      @clients.each do |c|
+        puts "sending alert"
+        c.send(Factory.build_alert(:server, Time.now.to_f, "User #{nick} has connected."))
+      end
+    end
+
+    def left(nick)
+      @clients.each do |c|
+        c.send(Factory.build_alert(:server, Time.now.to_f, "User #{nick} has disconnected."))
+      end
+    end
+
     def ping(source)
-      source.send(build_pong)
+      source.send(Factory.build_pong)
     end
 
     def msg(source, channel, message)
       @log.debug "Message from " + source.ident
       @clients.each do |c|
         if c != source
-          c.send(build_smsg(source.nick, @hostname, channel, Time.now.to_f, message))
+          c.send(Factory.build_smsg(source.nick, @hostname, channel, Time.now.to_f, message))
         end
       end
     end

@@ -2,9 +2,7 @@ Ruby Server TODO
 
 - More graceful shutdown
 
-- Server links
-
-- Dead client pruning
+- Server links (with network alerts)
 
 - error reporting
 

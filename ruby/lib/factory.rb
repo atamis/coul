@@ -26,7 +26,7 @@ module Coul
       else
         raise ArgumentError, "source needs to be :server or :network"
       end
-      "#{header}ALERT #{source} #{timestamp}\n#{message}\n"
+      "#{header}ALERT #{source} #{timestamp}\n#{message}\n\n"
     end
 
 
