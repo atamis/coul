@@ -2,10 +2,13 @@ REPORTER = spec
 
 all: jshint test
 
-test:
+parser: lib/coul-parser.pegjs
+	`npm bin`/pegjs lib/coul-parser.pegjs
+
+test: parser
 	@NODE_ENV=test ./node_modules/.bin/mocha --recursive --reporter $(REPORTER) --timeout 3000
 
-jshint:
+jshint: parser
 	jshint lib examples test index.js
 
 tests: test
