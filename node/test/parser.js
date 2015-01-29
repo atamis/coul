@@ -79,6 +79,16 @@ describe('Parser', function(){
       assert.equal("This is a test.\nNice.\n", obj.message)
     })
 
+    it('should parse longer hostname smsg', function() {
+      var obj = parser("COUL 0.1.0 SMSG indigo@mail.test.com bots 542.523\nThis is a test.\nNice.\n\n")
+      assert.equal("SMSG", obj.command)
+      assert.equal("bots", obj.channel)
+      assert.equal("indigo", obj.nick)
+      assert.equal("mail.test.com", obj.server)
+      assert.equal("542.523", obj.timestamp)
+      assert.equal("This is a test.\nNice.\n", obj.message)
+    })
+
     it('should parse ip smsg', function() {
       var obj = parser("COUL 0.1.0 SMSG indigo@192.168.1.244 bots 542.523\nThis is a test.\nNice.\n\n")
       console.log(obj)
@@ -95,6 +105,22 @@ describe('Parser', function(){
         var obj = parser("COUL 0.1.0 SMSG indigo@" + ip + " bots 542.523\nThis is a test.\nNice.\n\n")
         assert.equal(ip, obj.server)
       }
+    })
+  })
+
+  describe("#alert", function() {
+    it('should parse server alert messages', function() {
+      var obj = parser("COUL 0.1.0 ALERT SERVER 4235.42\nThis is an alert.\nNo further information.\n\n")
+      assert.equal("SERVER", obj.source)
+      assert.equal("4235.42", obj.timestamp)
+      assert.equal("This is an alert.\nNo further information.\n", obj.message)
+    })
+
+    it('should parse network alert messages', function() {
+      var obj = parser("COUL 0.1.0 ALERT NETWORK 4235.42\nThis is an alert.\nNo further information.\n\n")
+      assert.equal("NETWORK", obj.source)
+      assert.equal("4235.42", obj.timestamp)
+      assert.equal("This is an alert.\nNo further information.\n", obj.message)
     })
   })
 

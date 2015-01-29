@@ -5,6 +5,10 @@
     flat = flat.concat.apply(flat, obj)
     return flat.join("").replace(/,/g, "")
   }
+
+  function fixmessage(obj) {
+    return obj[0].map(function(x) {return x[1]}).join("") + "\n"
+  }
 }
 
 start
@@ -24,7 +28,7 @@ message
   = maybespace "COUL 0.1.0 " body "\n" maybespace
 
 body
-  = ping / pong / msg / smsg
+  = ping / pong / msg / smsg / alert
 
 ping
   = command:"PING" { return {"command": command}}
@@ -53,6 +57,19 @@ smsg
           "message":message[0].map(function(x) {return x[1]}).join("") + "\n"
   }
 }
+
+
+alert
+  = command:"ALERT" " " source:("SERVER" / "NETWORK") " " timestamp:timestamp "\n" message:msg_body {
+  return {
+    "command":command,
+    "source":source,
+    "timestamp": fixtext(timestamp),
+    "message":fixmessage(message)
+  }
+}
+
+
 
 msg_body
   = ((! "\n\n" .)* "\n")
