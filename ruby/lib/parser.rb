@@ -53,7 +53,7 @@ module Coul
 
     rule(:ip_quad) {
       (
-        str('2') >> (match['1-4'] >> match['0-9'] | str('5') >> match['0-5']) |
+        str('2') >> (match['0-4'] >> match['0-9'] | str('5') >> match['0-5']) |
         str('1') >> match('[0-9]') >> match('[0-9]') |
         match('[0-9]') >> match('[0-9]') |
         match('[0-9]')
