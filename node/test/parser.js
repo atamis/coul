@@ -44,5 +44,29 @@ describe('Parser', function(){
     })
   })
 
+  describe('#pong', function(){
+    it('should parse pongs', function() {
+      assert.equal("PONG", parser("COUL 0.1.0 PONG\n\n").command)
+    })
+  })
+
+  describe('#msg', function(){
+    it('should parse msg', function() {
+      var obj = parser("COUL 0.1.0 MSG bots\nThis is a test\n\n")
+      console.log(obj)
+      assert.equal("MSG", obj.command)
+      assert.equal("bots", obj.channel)
+      assert.equal("This is a test\n", obj.message)
+    })
+    it('should parse multi-line msg', function() {
+      var obj = parser("COUL 0.1.0 MSG bots\nThis is a test\nNice.\n\n")
+      console.log(obj)
+      assert.equal("MSG", obj.command)
+      assert.equal("bots", obj.channel)
+      assert.equal("This is a test\nNice.\n", obj.message)
+    })
+  })
+
+
 })
 
