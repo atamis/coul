@@ -40,21 +40,18 @@ msg
   = command:"MSG" " " channel:letters "\n" message:msg_body {
   return {"command": command,
           "channel": channel.join(""),
-          "message":message[0].map(function(x) {return x[1]}).join("") + "\n"
+          "message":fixmessage(message)
   }
 }
 
 smsg
   = command:"SMSG" " " nick:letters "@" server:server " " channel:letters " " timestamp:timestamp "\n" message:msg_body {
-  server_flat = []
-  server_flat = server_flat.concat.apply(server_flat, server)
-  console.log("new: ", fixtext(server))
   return {"command": command,
           "nick": nick.join(""),
           "server": fixtext(server),
           "timestamp": fixtext(timestamp),
           "channel": channel.join(""),
-          "message":message[0].map(function(x) {return x[1]}).join("") + "\n"
+          "message":fixmessage(message)
   }
 }
 

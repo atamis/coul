@@ -54,7 +54,7 @@ module.exports = (function() {
         peg$c19 = function(command, channel, message) {
           return {"command": command,
                   "channel": channel.join(""),
-                  "message":message[0].map(function(x) {return x[1]}).join("") + "\n"
+                  "message":fixmessage(message)
           }
         },
         peg$c20 = "SMSG",
@@ -62,15 +62,12 @@ module.exports = (function() {
         peg$c22 = "@",
         peg$c23 = { type: "literal", value: "@", description: "\"@\"" },
         peg$c24 = function(command, nick, server, channel, timestamp, message) {
-          server_flat = []
-          server_flat = server_flat.concat.apply(server_flat, server)
-          console.log("new: ", fixtext(server))
           return {"command": command,
                   "nick": nick.join(""),
                   "server": fixtext(server),
                   "timestamp": fixtext(timestamp),
                   "channel": channel.join(""),
-                  "message":message[0].map(function(x) {return x[1]}).join("") + "\n"
+                  "message":fixmessage(message)
           }
         },
         peg$c25 = "ALERT",

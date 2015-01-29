@@ -1,15 +1,6 @@
 var assert = require("assert")
 var parser = require('../lib/wrapper')
 
-describe('Array', function(){
-  describe('#indexOf()', function(){
-    it('should return -1 when the value is not present', function(){
-      assert.equal(-1, [1,2,3].indexOf(5));
-      assert.equal(-1, [1,2,3].indexOf(0));
-    })
-  })
-})
-
 describe('Wrapper', function() {
   describe('#process', function() {
     var process = parser.process
@@ -53,14 +44,12 @@ describe('Parser', function(){
   describe('#msg', function(){
     it('should parse msg', function() {
       var obj = parser("COUL 0.1.0 MSG bots\nThis is a test\n\n")
-      console.log(obj)
       assert.equal("MSG", obj.command)
       assert.equal("bots", obj.channel)
       assert.equal("This is a test\n", obj.message)
     })
     it('should parse multi-line msg', function() {
       var obj = parser("COUL 0.1.0 MSG bots\nThis is a test\nNice.\n\n")
-      console.log(obj)
       assert.equal("MSG", obj.command)
       assert.equal("bots", obj.channel)
       assert.equal("This is a test\nNice.\n", obj.message)
@@ -70,7 +59,6 @@ describe('Parser', function(){
   describe('#smsg', function(){
     it('should parse hostname smsg', function() {
       var obj = parser("COUL 0.1.0 SMSG indigo@test.com bots 542.523\nThis is a test.\nNice.\n\n")
-      console.log(obj)
       assert.equal("SMSG", obj.command)
       assert.equal("bots", obj.channel)
       assert.equal("indigo", obj.nick)
@@ -91,7 +79,6 @@ describe('Parser', function(){
 
     it('should parse ip smsg', function() {
       var obj = parser("COUL 0.1.0 SMSG indigo@192.168.1.244 bots 542.523\nThis is a test.\nNice.\n\n")
-      console.log(obj)
       assert.equal("SMSG", obj.command)
       assert.equal("bots", obj.channel)
       assert.equal("indigo", obj.nick)

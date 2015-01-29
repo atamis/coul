@@ -19,7 +19,6 @@ var process = function(ary) {
        }
     }
   })
-  console.log(obj)
 
   return obj;
 }
@@ -27,7 +26,6 @@ var process = function(ary) {
 module.exports = function(string) {
 
   result = parser.parse(string);
-  console.log(result)
 
   return process(result);
 
