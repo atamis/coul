@@ -20,6 +20,13 @@ module.exports = (function() {
     return header() + "SMSG " + nick + "@" + server + " " + channel + " " + timestamp + "\n" + message + "\n"
   }
 
+  this.msg = function(channel, message) {
+    if (message.slice(-1) != "\n") {
+      message = message + "\n"
+    }
+    return header() + "MSG " + channel + "\n" + message + "\n"
+  }
+
   return this;
 
 })()

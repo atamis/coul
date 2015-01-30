@@ -4,6 +4,8 @@
 
 // Load the TCP Library
 net = require('net');
+parser = require('./lib/wrapper')
+factory = require('./lib/factory.js')
 
 // Keep track of the chat clients
 var clients = [];

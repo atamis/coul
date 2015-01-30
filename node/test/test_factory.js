@@ -46,4 +46,23 @@ describe("factory", function() {
       }, obj)
     })
   })
+
+  describe("#msg", function() {
+    it("should build a msg message", function() {
+      assert.equal("COUL " + version + " MSG bots\nThis is a test.\nNice.\n\n", factory.msg("bots", "This is a test.\nNice.\n"))
+      assert.equal("COUL " + version + " MSG bots\nThis is a test.\n\n", factory.msg("bots", "This is a test.\n"))
+    })
+
+    it("should add a newline to messages", function() {
+      assert.equal("COUL " + version + " MSG bots\nThis is a test.\n\n", factory.msg("bots", "This is a test."))
+    })
+
+    it("should produce parsable msg messages", function() {
+      var obj = parser(factory.msg("bots", "This is a test\n"))
+      assert.deepEqual({"command":"MSG",
+                       "channel":"bots",
+                       "message":"This is a test\n"
+      }, obj)
+    })
+  })
 })
