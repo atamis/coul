@@ -34,20 +34,20 @@ log.debug 'Testing parser'
 p = Coul::Parser.new
 
 msg = <<END
-COUL 0.1 MSG bots
+COUL 0.1.0 MSG bots
 This is a test.
 This is another test.
 
 END
 
 smsg = <<END
-COUL 0.1 SMSG indigo@192.168.1.2 bots 5.5
+COUL 0.1.0 SMSG indigo@192.168.1.2 bots 5.5
 This is a test.
 
 END
 
 alert = <<END
-COUL 0.1 ALERT SERVER 5504.253
+COUL 0.1.0 ALERT SERVER 5504.253
 This is a server alert.
 
 END
