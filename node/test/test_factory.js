@@ -65,4 +65,49 @@ describe("factory", function() {
       }, obj)
     })
   })
+
+  describe("#alert", function() {
+    it("should build a server alert message", function() {
+      assert.equal("COUL " + version + " ALERT SERVER 12345.12345\nThis is a test.\nNice.\n\n", factory.alert("SERVER", "12345.12345", "This is a test.\nNice.\n"))
+      assert.equal("COUL " + version + " ALERT SERVER 12345.12345\nThis is a test.\n\n", factory.alert("SERVER", "12345.12345", "This is a test.\n"))
+    })
+
+    it("should build a server alert message", function() {
+      assert.equal("COUL " + version + " ALERT NETWORK 12345.12345\nThis is a test.\nNice.\n\n", factory.alert("NETWORK", "12345.12345", "This is a test.\nNice.\n"))
+      assert.equal("COUL " + version + " ALERT NETWORK 12345.12345\nThis is a test.\n\n", factory.alert("NETWORK", "12345.12345", "This is a test.\n"))
+    })
+
+    it("should throw an error when the source is improperly specified", function() {
+      assert.throws(function() {factory.alert("neither", "Test.")}, Error)
+    })
+
+    it("should add a newline to alert", function() {
+      assert.equal("COUL " + version + " ALERT SERVER 12345.12345\nThis is a test.\n\n", factory.alert("SERVER", "12345.12345","This is a test."))
+    })
+
+    it("should produce parsable msg alert", function() {
+      var obj = parser(factory.alert("SERVER", "12345.12345", "This is a test\n"))
+      assert.deepEqual({"command":"ALERT",
+                       "source":"SERVER",
+                       "timestamp":"12345.12345",
+                       "message":"This is a test\n"
+      }, obj)
+      var obj = parser(factory.alert("NETWORK", "12345.12345", "This is a test\n"))
+      assert.deepEqual({"command":"ALERT",
+                       "source":"NETWORK",
+                       "timestamp":"12345.12345",
+                       "message":"This is a test\n"
+      }, obj)
+    })
+  })
+
+  describe("#now", function() {
+    it("shouldn't throw an error from smsg", function() {
+      var obj = factory.now.smsg("nick", "server", "channel", "message\n")
+    })
+
+    it("shouldn't throw an error from alert", function() {
+      var obj = factory.now.alert("SERVER", "Alert message\n")
+    })
+  })
 })
