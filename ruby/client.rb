@@ -71,7 +71,7 @@ while true
       done if sock.eof
       line = s.gets
       serv_buffer += line
-      if line == "\n"
+      if serv_buffer.slice(-2, 2) == "\n\n"
         begin
           parsed = parser.parse(serv_buffer)
           serv_buffer = ""
