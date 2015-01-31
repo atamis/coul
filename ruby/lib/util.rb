@@ -22,6 +22,22 @@ module AppData
     end
   end
 
+  def parameter_array(*names)
+    names.each do |name|
+      attr_accessor name
+      self.send("#{name}=", [])
+      define_method name do |*values|
+        if values.empty?
+          return instance_variable_get("@#{name}")
+        else
+          values.each do |v|
+            instance_variable_get("@#{name}") << v
+          end
+        end
+      end
+    end
+  end
+
   # And we define a wrapper for the configuration block, that we'll use to set up
   # our set of options
   def config(&block)

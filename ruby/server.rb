@@ -16,6 +16,7 @@ require 'parser'
 require 'client'
 require 'engine'
 require 'util'
+require 'link'
 
 require 'pp'
 require 'socket'
@@ -25,9 +26,15 @@ log.debug 'Loading configuration'
 AppData.config do
   parameter :port
   parameter :hostname
+  parameter_array :link
 end
 
+
 require './config.rb'
+
+ident = "#{AppData.hostname}:#{AppData.port}"
+
+log.debug AppData.link.inspect
 
 log.debug 'Testing parser'
 
@@ -64,11 +71,26 @@ end
 
 
 clients = []
+links = []
 engine = Coul::Engine.new(AppData.hostname, clients, log)
 
 server = TCPServer.new AppData.port # Server bind to port 2000
 
-Signal.trap("INT") do 
+AppData.link.each do |link|
+  a = link.split(":")
+  if a.length != 2
+    raise ArgumentException.new("Improperly formatted link")
+    exit
+  end
+  name = a[0]
+  port = a[1]
+
+  c = Coul::Link.new(ident, name, port, clients, log)
+  c.connect
+  links << c
+end
+
+Signal.trap("INT") do
   puts "Safe shutdown"
   clients.each do |client|
     client.close

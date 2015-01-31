@@ -26,7 +26,19 @@ module Coul
       else
         raise ArgumentError, "source needs to be :server or :network"
       end
-      "#{header}ALERT #{source} #{timestamp}\n#{message}\n\n"
+
+      if message.slice(-1) != "\n"
+        message += "\n"
+      end
+
+      "#{header}ALERT #{source} #{timestamp}\n#{message}\n"
+    end
+
+    def self.build_link(message)
+      if message.slice(-1) != "\n"
+        message += "\n"
+      end
+      "#{header}LINK\n#{message}\n"
     end
 
 

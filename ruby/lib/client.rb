@@ -2,12 +2,14 @@ require 'factory'
 
 module Coul
   class Client
-    attr_accessor :sock, :nick
+    attr_accessor :sock, :nick, :link, :link_name
     def initialize(socket, clients, engine, logger=NullLogger.new)
       @sock = socket
       @clients = clients
       @engine = engine
       @buffer = ""
+      @link = false
+      @link_name = ""
       @log = logger
       @nick = rand(9999)
     end

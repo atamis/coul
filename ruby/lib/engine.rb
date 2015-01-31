@@ -17,6 +17,8 @@ module Coul
         ping(source)
       when "MSG"
         msg(source, parsed[:channel], parsed[:message])
+      when "LINK"
+        link(source, parsed[:message])
       end
     end
 
@@ -24,13 +26,13 @@ module Coul
       puts "sending alerts"
       @clients.each do |c|
         puts "sending alert"
-        c.send(Factory.build_alert(:server, Time.now.to_f, "User #{nick} has connected."))
+        c.send(Factory.build_alert(:server, Time.now.to_f, "User #{nick} has connected.\n"))
       end
     end
 
     def left(nick)
       @clients.each do |c|
-        c.send(Factory.build_alert(:server, Time.now.to_f, "User #{nick} has disconnected."))
+        c.send(Factory.build_alert(:server, Time.now.to_f, "User #{nick} has disconnected.\n"))
       end
     end
 
@@ -44,6 +46,23 @@ module Coul
         if c != source
           c.send(Factory.build_smsg(source.nick, @hostname, channel, Time.now.to_f, message))
         end
+      end
+    end
+
+    def link(source, message)
+      source.link = true
+      source.link_name = message.to_s.chomp
+      source.send(Factory.build_link("YES"))
+      @log.warn "Feeding link to " + source.link_name
+    end
+
+    def redestribute(resp)
+      @clients.each do |c|
+        if c.link && c.link_name == resp[:server]
+          next
+        end
+        c.send(Factory.build_smsg(resp[:nick], resp[:server], resp[:channel],
+                                  resp[:timestamp], resp[:message]))
       end
     end
 

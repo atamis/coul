@@ -9,7 +9,7 @@ module Coul
 
     rule(:header) { str("COUL " + VERSION + " ")}
 
-    rule(:body) { ping | pong | msg | smsg | alert}
+    rule(:body) { ping | pong | msg | smsg | alert | link}
 
     rule(:ping) { str("PING").as(:command)}
     rule(:pong) { str("PONG").as(:command)}
@@ -43,6 +43,10 @@ module Coul
     rule(:alert) do
       str("ALERT").as(:command) >> str(" ") >> (str("SERVER") | str("NETWORK")).as(:source) >>
       str(' ') >> timestamp >> str("\n") >> msg_body
+    end
+
+    rule(:link) do
+      str("LINK").as(:command) >> str("\n") >> msg_body
     end
 
     root :message
