@@ -40,7 +40,7 @@ port = ARGV[0].split(':')[1]
 
 log.info "Connecting to " + ARGV[0]
 
-link = Coul::Link.new("manual_link:00", server, port, Coul::Engine.new("manual_link", [], link), [], log)
+link = Coul::Link.new("manual_link:00", server, port, Coul::Engine.new("manual_link", [], link), log)
 link.connect
 
 loop do

@@ -29,8 +29,15 @@ AppData.config do
   parameter_array :link
 end
 
+log.debug ARGV.inspect
 
-require './config.rb'
+if ARGV.length > 0
+  log.info "Loading config from " + ARGV[0]
+  require "./" + ARGV[0]
+else
+  log.info "Loading config from default"
+  require './config.rb'
+end
 
 ident = "#{AppData.hostname}:#{AppData.port}"
 
@@ -48,7 +55,13 @@ This is another test.
 END
 
 smsg = <<END
-COUL 0.1.0 SMSG indigo@192.168.1.2 bots 5.5
+COUL 0.1.0 SMSG indigo@192.168.1.2:2000 bots 5.5
+This is a test.
+
+END
+
+smsg2 = <<END
+COUL 0.1.0 SMSG indigo@example.com:2000 bots 5.5
 This is a test.
 
 END
@@ -62,6 +75,7 @@ END
 begin
   log.debug p.parse(msg)
   log.debug p.parse(smsg)
+  log.debug p.parse(smsg2)
   log.debug p.parse(alert)
   log.debug p.hostname.parse("mail.test.com")
   log.debug p.ip.parse("99.255.255.255")
@@ -72,7 +86,7 @@ end
 
 clients = []
 links = []
-engine = Coul::Engine.new(AppData.hostname, clients, log)
+engine = Coul::Engine.new(AppData.hostname + ":" + AppData.port.to_s, clients, log)
 
 server = TCPServer.new AppData.port # Server bind to port 2000
 
@@ -85,7 +99,7 @@ AppData.link.each do |link|
   name = a[0]
   port = a[1]
 
-  c = Coul::Link.new(ident, name, port, clients, log)
+  c = Coul::Link.new(ident, name, port, engine, log)
   c.connect
   links << c
 end

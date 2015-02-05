@@ -1,7 +1,8 @@
 AppData.config do
-  port 2000
+  port 3000
   hostname 'localhost'
 
-  link "localhost:3000"
+  link "localhost:2000"
 end
+
 

@@ -27,7 +27,7 @@ module Coul
         raise ArgumentError, "source needs to be :server or :network"
       end
 
-      if message.slice(-1) != "\n"
+      if message.to_s.slice(-1) != "\n"
         message += "\n"
       end
 

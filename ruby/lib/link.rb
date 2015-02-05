@@ -9,43 +9,57 @@ module Coul
       @name = name
       @port = port
       @engine = engine
-      @clients = clients
       @parser = Parser.new
       @log = log
       @log.debug "Linking to " + ident
-
+      @retry_count = 0
     end
 
     def connect
       Thread.new do
-        begin
-          @sock = TCPSocket.new(@name, @port)
-          @sock.puts Factory.build_link(ident)
-          while buf = read_buffer
-            puts buf.inspect
-            resp = @parser.parse(buf)
-            puts resp.inspect
-            next if resp[:command] != "LINK"
-            if resp[:message] != "YES\n"
-              @log.warn ident + " link rejected"
-              return
-            else
-              @log.info "Link with " + ident + " confirmed."
-              break
+        catch(:done) do
+          loop do
+            begin
+              @sock = TCPSocket.new(@name, @port)
+              @sock.puts Factory.build_link(@me)
+              @retry_count = 0
+              while buf = read_buffer
+                puts buf.inspect
+                resp = @parser.parse(buf)
+                puts resp.inspect
+                next if resp[:command] != "LINK"
+                if resp[:message] != "YES\n"
+                  @log.warn ident + " link rejected"
+                  throw :done
+                else
+                  @log.info "Link with " + ident + " confirmed."
+                  @engine.link_established(ident)
+                  break
+                end
+              end
+              while buf = read_buffer
+                puts buf.inspect
+                resp = @parser.parse(buf)
+                puts resp.inspect
+                @engine.redistribute(ident, resp)
+              end
+            rescue Errno::ECONNREFUSED
+              @retry_count += 1
+              @log.warn "Link to " + ident + " refused, retry in " + retry_sleep.to_s
+              sleep(retry_sleep)
+            rescue Exception => e
+              puts e.message
+              puts e.backtrace
+              sleep(10)
             end
           end
-          while buf = read_buffer
-            puts buf.inspect
-            resp = @parser.parse(buf)
-            puts resp.inspect
-            engine.redistribute(resp)
-          end
-        rescue Exception => e
-          puts e.message
-          puts e.backtrace
         end
 
       end.abort_on_exception
+    end
+
+    def retry_sleep
+      [@retry_count*15, 90].min
     end
 
     def ident

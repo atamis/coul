@@ -73,6 +73,7 @@ while true
       serv_buffer += line
       if serv_buffer.slice(-2, 2) == "\n\n"
         begin
+          puts serv_buffer.inspect
           parsed = parser.parse(serv_buffer)
           serv_buffer = ""
         rescue Parslet::ParseFailed => failure

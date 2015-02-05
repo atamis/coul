@@ -23,23 +23,29 @@ module Coul
       @engine.joined(nick)
 
       @log.debug ident + " listening"
-      while !(@sock.closed?) && line = @sock.gets
-        begin
-          if line != "\n"
-            @buffer += line
-          else
-            # Process the buffer
-            @buffer += line
-            process(@buffer)
+      begin
+        while !(@sock.closed?) && line = @sock.gets
+          begin
+            if line != "\n"
+              @buffer += line
+            else
+              # Process the buffer
+              @buffer += line
+              process(@buffer)
+              @buffer = ""
+            end
+          rescue Parslet::ParseFailed => failure
+            @log.error "Parse Error:" + failure.cause.ascii_tree
+          rescue => e
+            @log.error "ERROR: " + e.class.to_s + " " + e.message
+            @log.error e.backtrace
             @buffer = ""
           end
-        rescue Parslet::ParseFailed => failure
-          @log.error "Parse Error:" + failure.cause.ascii_tree
-        rescue => e
-          @log.error "ERROR: " + e.class.to_s + " " + e.message
-          @log.error e.backtrace
-          @buffer = ""
         end
+      rescue => e
+        @log.error "ERROR: " + e.class.to_s + " " + e.message
+        @log.error e.backtrace
+        return
       end
 
     ensure

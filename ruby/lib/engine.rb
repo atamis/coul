@@ -56,13 +56,30 @@ module Coul
       @log.warn "Feeding link to " + source.link_name
     end
 
-    def redestribute(resp)
-      @clients.each do |c|
-        if c.link && c.link_name == resp[:server]
-          next
+    def redistribute(source, resp)
+      if resp[:command] == "SMSG"
+        @clients.each do |c|
+          if c.link && c.link_name == resp[:server]
+            next
+          end
+          c.send(Factory.build_smsg(resp[:nick], resp[:server], resp[:channel],
+                                    resp[:timestamp], resp[:message]))
         end
-        c.send(Factory.build_smsg(resp[:nick], resp[:server], resp[:channel],
-                                  resp[:timestamp], resp[:message]))
+      end
+      
+      if resp[:command] == "ALERT" && resp[:source] == "NETWORK"
+        @clients.each do |c|
+          if c.link && c.link_name == source
+            next
+          end
+          c.send(Factory.build_alert(resp[:source] == "NETWORK" ? :network : :server, resp[:timestamp], resp[:message]))
+        end
+      end
+    end
+
+    def link_established(ident)
+      @clients.each do |c|
+        c.send(Factory.build_alert(:network, Time.now.to_f, "Link established with #{ident}"))
       end
     end
 

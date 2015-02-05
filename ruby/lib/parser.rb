@@ -23,7 +23,7 @@ module Coul
     rule(:smsg)  do
       str("SMSG").as(:command) >>
       str(" ") >> match('\w').repeat.as(:nick) >>
-        str("@") >> (hostname | ip).as(:server) >>
+        str("@") >> server.as(:server) >>
       str(" ") >> match('\w').repeat.as(:channel) >>
       str(" ") >> timestamp >>
       str("\n") >>
@@ -50,6 +50,10 @@ module Coul
     end
 
     root :message
+
+    rule(:server) do
+      (ip | hostname) >> (str(":") >> match['0-9'].repeat).maybe
+    end
 
     rule(:ip) {
       (ip_quad >> str('.')).repeat(3) >> ip_quad
