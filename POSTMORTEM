@@ -3,10 +3,10 @@
 ## What I did
 
 You can read my full list of goals in the README in this repo, but to
-quickly summarize, I wanted to build a series of servers programs and clients
-implementing a multi-server federated chat protocol. I had a number of
-servers and clients planned in several languages, and a number of
-"stretch goals".
+quickly summarize, I wanted to build a series of server programs and
+clients implementing a multi-server federated chat protocol.  I had
+a number of servers and clients planned in several languages, and a number
+of "stretch goals".
 
 ## Success
 
@@ -23,7 +23,7 @@ planning to implement with Google's protobuf, which takes a single
 protocol definition file and, using any number of converters, makes
 compatible binary parser and message builders for many common languages.
 This would have sped up the process immensely, and allowed me to focus on
-the stated goal of this winter term, network programming.
+the stated goal, network programming.
 
 Although the servers work well, handle multiple connections, and pass
 messages between them, I didn't have time to implement loop checking,
@@ -40,13 +40,13 @@ foresight plagued this project.
 
 ## What I would do differently
 
-If I were to do this project over completely, I would consider, as
-I stated in the "Success" section, using Google's protobuf. I might also
-consider focusing the project more carefully. This project had a number of
-different goals: study network programming, learn some new languages,
-implement a novel and untested protocol, and experiment with multi-server
-networks on the application layer. This is, to be honest, too many goals,
-and a number of them simply couldn't be explored.  Focusing the project
-more closely--using a known protocol, focusing on a single language, or
-a simpler program--would have resulted in a more complete, and likely more
-useful, project.
+If I were to do this particular project over completely, I would consider,
+as I stated in the "Success" section, using Google's protobuf. Generally,
+for future projects, I might also consider focusing the project more
+carefully.  This project had a number of different goals: study network
+programming, learn some new languages, implement a novel and untested
+protocol, and experiment with multi-server networks on the application
+layer. This is, to be honest, too many goals, and a number of them simply
+couldn't be explored.  Focusing the project more closely--using a known
+protocol, focusing on a single language, or a simpler goal program--would
+have resulted in a more complete, and likely more useful, project.
